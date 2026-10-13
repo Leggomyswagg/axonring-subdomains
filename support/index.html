@@ -226,18 +226,24 @@
   </footer>
 
   <script>
-    // Email capture (client-side only — replace with real endpoint when ready)
+    // This static page prepares a visitor-sent email; it does not save addresses.
     const form = document.getElementById('notify-form');
     if (form) {
-      form.addEventListener('submit', e => {
-        e.preventDefault();
-        const input = form.querySelector('input');
-        const email = input.value.trim();
-        if (!email || !email.includes('@')) return;
-        // TODO: POST to your email capture endpoint
-        // fetch('/api/notify', { method: 'POST', body: JSON.stringify({email, source: 'support'}) })
-        document.getElementById('form-success').classList.add('show');
-        form.style.display = 'none';
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        const email = form.querySelector('input').value.trim();
+        const subject = encodeURIComponent('AxonRing support updates request');
+        const body = encodeURIComponent('Please notify me about AxonRing support updates.\nReply email: ' + email);
+        const request = 'mailto:support@axonring.com?subject=' + subject + '&body=' + body;
+        const message = document.getElementById('form-success');
+        message.textContent = 'Your request is prepared. Send it from your email app. ';
+        const fallback = document.createElement('a');
+        fallback.href = request;
+        fallback.textContent = 'Open prepared email';
+        message.appendChild(fallback);
+        message.classList.add('show');
+        window.location.href = request;
       });
     }
   </script>
