@@ -30,12 +30,16 @@ Each subdomain lives in its own folder. To deploy one:
 - `returns/` — returns.axonring.com (Coming Soon)
 - `account/` — account.axonring.com (Coming Soon)
 
-## Email Capture
+## Notification Requests
 
-All "Coming Soon" pages have a working email form. The form currently logs
-client-side only — wire it to a real endpoint when ready (Mailchimp, ConvertKit,
-Resend, custom API, etc.) by editing the `<script>` at the bottom of each
-index.html.
+Notification forms prepare an email to `support@axonring.com` with the page's
+category and the visitor's reply address. The visitor must send the email; no
+address is logged, stored, or automatically subscribed by the static pages.
+Each page remains self-contained for deployment from its own folder.
+
+Automated signup needs an approved email provider, server endpoint, and consent
+handling. Run `node --test tests/*.test.mjs` from the repository root to verify
+every page's request behavior without sending email.
 
 ## Design
 

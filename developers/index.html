@@ -219,8 +219,8 @@
         <input type="email" placeholder="your@email.com" required aria-label="Email address" />
         <button type="submit">Notify Me</button>
       </form>
-      <p class="form-note">We respect your privacy. No spam — ever.</p>
-      <div id="form-success" class="form-success">Thank you. You will be among the first to know.</div>
+      <p class="form-note">Opens your email app. Send the request there; this page does not save your address.</p>
+      <div id="form-success" class="form-success">Send the prepared email to request updates.</div>
     </div>
   </main>
 
@@ -234,18 +234,24 @@
   </footer>
 
   <script>
-    // Email capture (client-side only — replace with real endpoint when ready)
+    // This static page prepares a visitor-sent email; it does not save addresses.
     const form = document.getElementById('notify-form');
     if (form) {
-      form.addEventListener('submit', e => {
-        e.preventDefault();
-        const input = form.querySelector('input');
-        const email = input.value.trim();
-        if (!email || !email.includes('@')) return;
-        // TODO: POST to your email capture endpoint
-        // fetch('/api/notify', { method: 'POST', body: JSON.stringify({email, source: 'developers'}) })
-        document.getElementById('form-success').classList.add('show');
-        form.style.display = 'none';
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        const email = form.querySelector('input').value.trim();
+        const subject = encodeURIComponent('AxonRing developers updates request');
+        const body = encodeURIComponent('Please notify me about AxonRing developers updates.\nReply email: ' + email);
+        const request = 'mailto:support@axonring.com?subject=' + subject + '&body=' + body;
+        const message = document.getElementById('form-success');
+        message.textContent = 'Your request is prepared. Send it from your email app. ';
+        const fallback = document.createElement('a');
+        fallback.href = request;
+        fallback.textContent = 'Open prepared email';
+        message.appendChild(fallback);
+        message.classList.add('show');
+        window.location.href = request;
       });
     }
   </script>
